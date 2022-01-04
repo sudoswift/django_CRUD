@@ -1,1 +1,2 @@
+# .gitignore 파일은 프로젝트 폴더 최상단에 위치해야 한다.
 settings.py
