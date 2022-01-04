@@ -21,6 +21,7 @@ def htmltemplate(articletag, id = None):
             <input type ="submit" value ="DELETE">
         </form>
         </li>
+        <li><a href ="/update/{id}">update</a></li>
         '''
     ol = ''
     for topic in topics:
@@ -90,3 +91,29 @@ def delete(request):
         return redirect('/')
     
 
+@csrf_exempt
+def update(request, id):
+    global topics
+    if request.method == 'GET':
+        for topic in topics:
+            if topic['id'] == int(id):
+                selectTitle= {
+                    "title" : topic['title'],
+                    "body" : topic['body']
+                }
+        article = f'''
+        <form action ="/update/{id}/" method ="POST">
+        <p><input type="text" name ="title" placeholder = "Title" value = {selectTitle["title"]}></p>
+        <p><textarea name ="body" placeholder ="body">{selectTitle['body']}</textarea></p>
+        <p><input type ="submit"></p>
+        </form>
+        '''
+        return HttpResponse(htmltemplate(article, id))
+    elif request.method == 'POST':
+        title = request.POST['title']
+        body = request.POST['body']
+        for topic in topics:
+            if topic['id'] == int(id):
+                topic['title'] = title
+                topic['body'] = body
+        return redirect(f'/read/{id}')
